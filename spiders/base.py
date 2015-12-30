@@ -1,3 +1,4 @@
+'''
 from scrapy.spiders import Spider
 from scrapy.selector import Selector, HtmlXPathSelector
 from scrapy.loader import XPathItemLoader
@@ -51,3 +52,5 @@ class Ticketfly(Spider):
             #oader.add_value('age',          '21')
             
             yield loader.load_item()
+
+'''

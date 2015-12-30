@@ -7,11 +7,15 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.engine.url import URL
+from sqlalchemy import Sequence
 
+import datetime
+import pytz
 import settings
 
 # Create the base class, able to create classes that include directives to describe
 # the actual database table they will be mapped to
+# returns a new base class from which all mapped classes should inherit
 Base = declarative_base()
 
 
@@ -37,16 +41,20 @@ event_artists = Table('event_artists', Base.metadata,
 class Event(Base):
     __tablename__ = 'events'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(200))
+    id = Column(Integer, Sequence('event_id_seq'), primary_key=True)
+    event_num = Column(String(100))
+    title = Column(String(200))
     status = Column(String(100))
-    price = Column(String(100))
-    date = Column(String(100))
-    url = Column(String(200))
-    detail_url = Column(String(200))
+    ticket_price = Column(String(100))
+    event_ts = Column(String(100))
+    event_url = Column(String(200))
+    purchase_url = Column(String(200))
     venue_id = Column(Integer, ForeignKey('venues.id'))
     last_update = Column(String(100))
-    age = Column(String(100))
+    promoter = Column(String(200))
+    age_restriction = Column(String(100))
+    soldout_ts = Column(String(100))
+
     artists = relationship('Artist',
                            secondary=event_artists)
 
@@ -81,11 +89,12 @@ class Artist(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
     genre = Column(String(100))
-    familiarity = Column(Float)
-    hot = Column(Float)
-    terms = Column(String(1000))
-    twitter = Column(String(100))
-    songs = Column(String(1000))
+    info = Column(String(100))
+    #familiarity = Column(Float)
+    #hot = Column(Float)
+    #terms = Column(String(1000))
+    #twitter = Column(String(100))
+    #songs = Column(String(1000))
 
 
 def get_or_create(session, model, **kwargs):
@@ -96,6 +105,9 @@ def get_or_create(session, model, **kwargs):
         instance = model(**kwargs)
         session.add(instance)
         return instance
+
+def utcnow():
+    return datetime.datetime.now(tz=pytz.utc)
 
 
 

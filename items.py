@@ -17,28 +17,16 @@ class UrlItem(Item):
 
 
 class EventItem(Item):
-    name = Field()
+    title = Field()
     status = Field()
-    price = Field()
-    date = Field()
-    url = Field()
+    ticket_price = Field()
+    event_ts = Field()
+    event_url = Field()
+    purchase_url = Field()
     artists = Field()
+    promoter = Field()
     venue_id = Field()
-    last_update = Field()
-
-
-class EventItemSpecial(Item):
-    name = Field()
-    status = Field()
-    price = Field()
-    date = Field()
-    time = Field()
-    url = Field()
-    detail_url = Field()
-    artists = Field()
-    venue_id = Field()
-    last_update = Field()
-    age = Field()
+    age_restriction = Field()
 
 
 class EventLoader(ItemLoader):
@@ -47,4 +35,7 @@ class EventLoader(ItemLoader):
     default_output_processor = Join(',')
 
     status_out = TakeFirst()
-    price_out = TakeFirst()
+    ticket_price_out = TakeFirst()
+    purchase_url_out = TakeFirst()
+    age_restriction_out = TakeFirst()
+    promoter_out = TakeFirst()
