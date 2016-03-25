@@ -62,7 +62,7 @@ class BuildDbPipeline(object):
         # in the case that the scraped event has a status of 'Sold Out'
         # we then check to see if the status in the db is also 'Sold Out'
         # if the db shows that stored status != 'Sold Out'
-        # then we can set the soldout_ts (timestamp) to the current utc datetime
+        # then we can set the soldout_ts to the current utc datetime
         if ('Sold' in status) and (e.status != 'Sold Out'):
             e.soldout_ts = str(utcnow().isoformat())
             e.status = status
