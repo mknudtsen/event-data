@@ -47,6 +47,8 @@ class BuildDbPipeline(object):
         promoter = item['promoter']
 
         #spider.log('event artists: %s' % artists_clean)
+        if len(purchase_url) > 200:
+            purchase_url = ""
 
         # search event_url for set of numbers which are unique to that event
         # then set event_num (a unique id) with the match from event_url (m)
