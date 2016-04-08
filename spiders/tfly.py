@@ -24,6 +24,7 @@ class Recursive(CrawlSpider):
     def parse_event_detail(self, response):
         item = response.meta['item']
         loader = EventLoader(item, response=response)
+        loader.add_xpath('artists',         './/*[@class="artist-name"]/text()')
         loader.add_xpath('age_restriction', './/p[starts-with(@class, "age-restriction")]/text()')
         loader.add_value('age_restriction', 'NA')
         loader.add_xpath('promoter',        './/p[starts-with(@class, "event-sponsor")]/text()')
@@ -42,10 +43,10 @@ class Recursive(CrawlSpider):
             loader = EventLoader(EventItem(), selector=event)
             loader.add_xpath('title',       './/a/img[@class="event-results-image"]/@title')
             loader.add_xpath('event_url',   './/div[starts-with(@class, "event-results-content")]/a/@href')
-            loader.add_xpath('artists',     './/div[starts-with(@class, "event-results-titles")]/h3[starts-with(@class, "headliners summary")]/'
-                                            'a/text()')
-            loader.add_xpath('artists',     './/div[starts-with(@class, "event-results-titles")]/'
-                                            'p[starts-with(@class, "event-results-openers description")]/a/text()')
+            #loader.add_xpath('artists',     './/div[starts-with(@class, "event-results-titles")]/h3[starts-with(@class, "headliners summary")]/'
+            #                                'a/text()')
+            #loader.add_xpath('artists',     './/div[starts-with(@class, "event-results-titles")]/'
+            #                                'p[starts-with(@class, "event-results-openers description")]/a/text()')
             loader.add_xpath('event_ts',    './/div[starts-with(@class, "event-date dtstart")]/span[starts-with(@class, "value-title")]/@title')
             loader.add_xpath('ticket_price','.//div[starts-with(@class, "event-results-ticket-price")]/'
                                             'p[starts-with(@class, "event-price")]/text()')
@@ -56,8 +57,8 @@ class Recursive(CrawlSpider):
                                             'span[starts-with(@class, "ticket-link primary-link")]/'
                                             'a[starts-with(@class, "button radius small green tickets")]/text()')
             loader.add_xpath('status',      './/div[starts-with(@class, "event-results-ticket-price")]/'
-                                            'span[starts-with(@class, "button radius")]/text()')        
-            loader.add_value('status',      'NA')            
+                                            'span[starts-with(@class, "button radius")]/text()')
+            loader.add_value('status',      'NA')
             loader.add_xpath('purchase_url','.//div[starts-with(@class, "event-results-ticket-price")]/'
                                             'span[starts-with(@class, "ticket-link primary-link")]/'
                                             'a[starts-with(@class, "button radius small green tickets")]/@href')
@@ -65,10 +66,9 @@ class Recursive(CrawlSpider):
             loader.add_value('venue_id',     str(venue_id))
             #loader.add_value('last_update',  str(date.today()))
 
-            event_url = urljoin(response.url,loader.get_output_value('event_url'))   
+            event_url = urljoin(response.url,loader.get_output_value('event_url'))
             item = loader.load_item()
             yield scrapy.Request(url=event_url,
                                  meta={'item': item},
                                  callback=self.parse_event_detail,
                                  dont_filter=True)
-

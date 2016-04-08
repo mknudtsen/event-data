@@ -24,6 +24,7 @@ class EventItem(Item):
     event_url = Field()
     purchase_url = Field()
     artists = Field()
+    artists_alt = Field()
     promoter = Field()
     venue_id = Field()
     age_restriction = Field()

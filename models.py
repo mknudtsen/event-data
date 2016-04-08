@@ -46,13 +46,15 @@ class Event(Base):
     title = Column(String(200))
     status = Column(String(100))
     ticket_price = Column(String(100))
+    ticket_price_cleaned = Column(String(100))
     event_ts = Column(String(100))
     event_url = Column(String(200))
     purchase_url = Column(String(200))
     venue_id = Column(Integer, ForeignKey('venues.id'))
-    last_update = Column(String(100))
     promoter = Column(String(200))
     age_restriction = Column(String(100))
+    updated_ts = Column(String(100))
+    created_ts = Column(String(100))
     soldout_ts = Column(String(100))
 
     artists = relationship('Artist',
@@ -79,6 +81,8 @@ class Venue(Base):
     about = Column(String(1000))
     capacity = Column(Integer)
     ticketing = Column(String(50))
+    created_ts = Column(String(100))
+    updated_ts = Column(String(100))
 
     events = relationship('Event', backref='venue')
 
@@ -88,29 +92,19 @@ class Artist(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
+    created_ts = Column(String(100))
+    updated_ts = Column(String(100))
     genre = Column(String(100))
     info = Column(String(100))
-    #familiarity = Column(Float)
-    #hot = Column(Float)
-    #terms = Column(String(1000))
-    #twitter = Column(String(100))
-    #songs = Column(String(1000))
-
 
 def get_or_create(session, model, **kwargs):
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
-        return instance
+        return instance, False
     else:
         instance = model(**kwargs)
         session.add(instance)
-        return instance
+        return instance, True
 
 def utcnow():
     return datetime.datetime.now(tz=pytz.utc)
-
-
-
-
-
-

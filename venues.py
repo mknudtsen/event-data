@@ -13,7 +13,7 @@ session = Session()
 with open(CSV_FILE) as f:
     cf = csv.DictReader(f, delimiter=',')
     for row in cf:
-        v = get_or_create(session, Venue, **row)
+        v, v_created = get_or_create(session, Venue, **row)
         session.add(v)
 
 session.commit()
